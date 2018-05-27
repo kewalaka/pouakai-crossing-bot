@@ -1,6 +1,7 @@
+require('dotenv-extended').load();
+
 var restify = require('restify');
 var builder = require('botbuilder');
-var envy = require('envy');
 
 // Load environment variables
 const env = envy();
@@ -15,8 +16,8 @@ server.listen(process.env.PORT || 3978, function () {
 
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
-    appId: env.microsoftAppId,
-    appPassword: env.microsoftAppPassword
+    appId: env.MICROSOFT_APP_ID,
+    appPassword: env.MICROSOFT_APP_PASSWORD
 });
 
 // Listen for messages from users 
@@ -35,7 +36,7 @@ var bot = new builder.UniversalBot(connector, function (session) {
 
 // You can provide your own model by specifing the 'LUIS_MODEL_URL' environment variable
 // This Url can be obtained by uploading or creating your model from the LUIS portal: https://www.luis.ai/
-var recognizer = new builder.LuisRecognizer(env.luisModelUrl);
+var recognizer = new builder.LuisRecognizer(env.LUIS_MODEL_URL);
 bot.recognizer(recognizer);
 
 bot.dialog('CheckHazards', (session,args) => {
