@@ -28,7 +28,7 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 
 // Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 var bot = new builder.UniversalBot(connector, function (session) {
-    session.send('Sorry, I did not understand \'%s\'. Type \'help\' if you need assistance.', session.message.text);
+    session.send('Sorry, I did not understand \'%s\'. I\'m only new, and still not very bright.', session.message.text);
 }).set('storage', inMemoryStorage); // Register in memory storage
 
 // You can provide your own model by specifing the 'LUIS_MODEL_URL' environment variable
@@ -36,9 +36,34 @@ var bot = new builder.UniversalBot(connector, function (session) {
 var recognizer = new builder.LuisRecognizer(process.env.LUIS_MODEL_URL);
 bot.recognizer(recognizer);
 
-bot.dialog('CheckHazards', (session,args) => {
-    session.endDialog(`4th April '18 - The Holly Hut Track between Boomerang Slip and the Kokowai Track junction is closed due to a large landslide which is still active and unsafe to cross.`)
+bot.dialog('Place.CheckHazards', (session,args) => {
+    setTimeout(() => {
+        session.endDialog(`4th April '18 - The Holly Hut Track between Boomerang Slip and the Kokowai Track junction is closed due to a large landslide which is still active and unsafe to cross.`)
+    }, 1500);
 }).triggerAction({
-    matches: 'GetWeather'
+    matches: 'Place.CheckHazards'
 });
 
+bot.dialog('Weather', (session,args) => {
+    session.endDialog(`It's Taranaki, the weather is always awesome!`)
+}).triggerAction({
+    matches: 'Weather'
+});
+
+bot.dialog('Greeting', (session,args) => {
+    session.endDialog(`Hello, one day, I'll be able to tell you lots about the Pouakai crossing, why not ask me about hazards or the weather?`)
+}).triggerAction({
+    matches: 'Greeting'
+});
+
+bot.dialog('Greeting.HowAreYou', (session,args) => {
+
+    var Reponses = [
+        'Doing great, but I wish I was out hiking!',
+        'I\'m really good, thanks for asking!'
+    ];
+
+    session.endDialog(`${Reponses[Math.floor(Math.random() * Reponses.length)]}`)
+}).triggerAction({
+    matches: 'Greeting.HowAreYou'
+});
