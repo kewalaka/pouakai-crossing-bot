@@ -7,14 +7,14 @@ const env = envy();
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 3978, function () {
+server.listen(env.port || env.port || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
 
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
-    appId: env.MICROSOFT_APP_ID,
-    appPassword: env.MICROSOFT_APP_PASSWORD
+    appId: env.microsoftAppId,
+    appPassword: env.microsoftAppPassword
 });
 
 // Listen for messages from users 
@@ -33,11 +33,12 @@ var bot = new builder.UniversalBot(connector, function (session) {
 
 // You can provide your own model by specifing the 'LUIS_MODEL_URL' environment variable
 // This Url can be obtained by uploading or creating your model from the LUIS portal: https://www.luis.ai/
-var recognizer = new builder.LuisRecognizer(env.LUIS_MODEL_URL);
+var recognizer = new builder.LuisRecognizer(env.luisModelUrl);
 bot.recognizer(recognizer);
 
-bot.dialog('GetWeather', (session,args) => {
-    session.endDialog(`It's Taranaki, the weather is always great!`)
+bot.dialog('CheckHazards', (session,args) => {
+    session.endDialog(`4th April '18 - The Holly Hut Track between Boomerang Slip and the Kokowai Track junction is closed due to a large landslide which is still active and unsafe to cross.`)
 }).triggerAction({
     matches: 'GetWeather'
-})
+});
+
