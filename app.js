@@ -7,7 +7,9 @@ const env = envy();
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(env.port || env.port || 3978, function () {
+// must use process.env.PORT to make sure you're hooked up to iisnode
+// https://github.com/tjanczuk/iisnode/issues/564
+server.listen(process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
 
